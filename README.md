@@ -26,7 +26,12 @@ groceries in your Amazon cart, navigates to checkout, and **asks for approval**
 before touching payment. One text: `CONFIRM BUY`. That's it.
 
 <p align="center">
-  <img src="docs/img/sms-confirmation.jpg" width="60%" alt="SMS confirmation showing macros logged and remaining budget">
+  <img src="docs/img/dashboard.png" width="80%" alt="Google Sheets dashboard with calorie line chart, macro pie chart, and summary cards">
+  <br><i>The dashboard: charts, cards, formatting — all via metabolix agent.</i>
+</p>
+
+<p align="center">
+  <img src="docs/img/salad-dinner.png" width="60%" alt="SMS confirmation showing macros logged and remaining budget">
   <br><i>What you get after every meal — macros logged, budget remaining, metabolic insight.</i>
 </p>
 
@@ -41,10 +46,6 @@ the form. Metabolix is **vision-first and autonomous**:
 - **Proactive intervention** — detects protein deficits, stages groceries, awaits approval.
 - **Monthly rollover** — new sheet auto-created, previous month's report emailed.
 
-<p align="center">
-  <img src="docs/img/dashboard.jpg" width="80%" alt="Google Sheets dashboard with calorie line chart, macro pie chart, and summary cards">
-  <br><i>The dashboard Gemini creates: charts, cards, formatting — all automatic.</i>
-</p>
 
 ## How it works
 
@@ -83,8 +84,8 @@ Two inputs, one engine:
 6. **Remembered** — stored in SQLite + Google Sheet for weekly/monthly analysis.
 
 <p align="center">
-  <img src="docs/img/vision-analysis.jpg" width="50%" alt="Food photo being analyzed with overlays showing identified items">
-  <br><i>Vision analysis: portions estimated, ingredients identified, macros calculated.</i>
+  <img src="docs/img/amazon-search.png" width="50%" alt="Food photo being analyzed with overlays showing identified items">
+  <br><i>If Nutrition Goal is not achieved, Agent Helps in seraching alternatives on Amazon and add them "Add to Cart".</i>
 </p>
 
 ## The TDEE science
