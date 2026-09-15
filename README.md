@@ -18,12 +18,12 @@
 </p>
 
 <p align="center">
-  <a href="https://youtu.be/YOUR_VIDEO_ID">
+  <a href="https://www.youtube.com/watch?v=otOzjEqGbFY">
     <img src="docs/img/thumbnail.png" width="72%" alt="Watch Metabolix analyze food and track macros">
   </a>
   <br>
   <b>
-    <a href="https://youtu.be/YOUR_VIDEO_ID">
+    <a href="https://www.youtube.com/watch?v=otOzjEqGbFY">
       ▶&nbsp; Watch the demo — photo to logged macros in 10 seconds
     </a>
   </b>
@@ -50,7 +50,7 @@ groceries in your Amazon cart, navigates to checkout, and **asks for approval**
 before touching payment. One text: `CONFIRM BUY`. That's it.
 
 <p align="center">
-  <img src="docs/img/sms-confirmation.jpg" width="60%" alt="SMS confirmation showing macros logged and remaining budget">
+  <img src="docs/img/salad-dinner.png" width="60%" alt="dashboard">
   <br><i>What you get after every meal — macros logged, budget remaining, metabolic insight.</i>
 </p>
 
@@ -72,7 +72,7 @@ The agent **thinks** in a container; the work **happens** on your Mac via
 ```
 
 <p align="center">
-  <img src="docs/img/dashboard.jpg" width="80%" alt="Google Sheets dashboard with calorie line chart, macro pie chart, and summary cards">
+  <img src="docs/img/dashboard.png" width="80%" alt="Google Sheets dashboard with calorie line chart, macro pie chart, and summary cards">
   <br><i>The dashboard Gemini creates: charts, cards, meal timing — all automatic.</i>
 </p>
 
