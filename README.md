@@ -1,14 +1,38 @@
 <h1 align="center">Metabolix</h1>
 
+[![Project](https://img.shields.io/badge/Project-Metabolix-blueviolet?style=for-the-badge)](https://aiworthusing.com/agent-index/metabolix)
+[![Powered by](https://img.shields.io/badge/Powered%20by-Plow-blue?style=for-the-badge)](https://plow.co/)
+[![Infrastructure](https://img.shields.io/badge/Infrastructure-Plow%20Latch-orange?style=for-the-badge)](https://plow.co/latch)
+[![Category](https://img.shields.io/badge/Category-Fitness%20%26%20Macros-brightgreen?style=for-the-badge)](https://aiworthusing.com/agent-index)
+[![Hackathon](https://img.shields.io/badge/Hackathon-Hermes-red?style=for-the-badge)](https://github.com/nousresearch/hermes-agent)
+
 <p align="center">
   <b>An autonomous fitness agent with a phone number that tracks your nutrition —<br>
   just send a photo of your meal.</b>
 </p>
 
 <p align="center">
-  <a href="#install-5-minutes">Install</a> ·
+  <a href="#install-5-minutes">Install (5 min)</a> ·
   <a href="#how-it-works">How it works</a> ·
-  <a href="#what-makes-it-different">What makes it different</a>
+  <a href="https://aiworthusing.com/agent-index/metabolix">Agent Index</a>
+</p>
+
+<p align="center">
+  <a href="https://youtu.be/YOUR_VIDEO_ID">
+    <img src="docs/img/thumbnail.png" width="72%" alt="Watch Metabolix analyze food and track macros">
+  </a>
+  <br>
+  <b>
+    <a href="https://youtu.be/YOUR_VIDEO_ID">
+      ▶&nbsp; Watch the demo — photo to logged macros in 10 seconds
+    </a>
+  </b>
+  <br><br>
+  <i>
+    No typing. Send a photo via text, and Metabolix uses vision AI to analyze your meal,
+    <br>
+    log your macros to Google Sheets, and confirm your remaining daily budget — automatically.
+  </i>
 </p>
 
 ---
@@ -16,7 +40,7 @@
 You finish eating and walk away. By the time you look at your phone, your macros
 are logged and your dashboard is updated.
 
-Send a food photo via text. Metabolix analyzes it **using AI vision**, calculates
+Send a food photo via text. Metabolix analyzes it using **AI vision**, calculates
 every macro (calories, protein, carbs, fat), logs it to **your Google Sheet** via
 Gemini, and texts you back with what's left in your budget. No app. No manual
 entry. No spreadsheet work.
@@ -26,26 +50,9 @@ groceries in your Amazon cart, navigates to checkout, and **asks for approval**
 before touching payment. One text: `CONFIRM BUY`. That's it.
 
 <p align="center">
-  <img src="docs/img/dashboard.png" width="80%" alt="Google Sheets dashboard with calorie line chart, macro pie chart, and summary cards">
-  <br><i>The dashboard: charts, cards, formatting — all via metabolix agent.</i>
-</p>
-
-<p align="center">
-  <img src="docs/img/salad-dinner.png" width="60%" alt="SMS confirmation showing macros logged and remaining budget">
+  <img src="docs/img/sms-confirmation.jpg" width="60%" alt="SMS confirmation showing macros logged and remaining budget">
   <br><i>What you get after every meal — macros logged, budget remaining, metabolic insight.</i>
 </p>
-
-## What makes it different
-
-Every nutrition tracker is manual: you type the food, guess the portion, submit
-the form. Metabolix is **vision-first and autonomous**:
-
-- **Photo → logged** in 10 seconds. No typing, no searching databases.
-- **TDEE-based targets** calculated scientifically (Mifflin-St Jeor BMR × activity).
-- **Gemini-powered dashboards** — beautiful charts auto-generated, no manual formatting.
-- **Proactive intervention** — detects protein deficits, stages groceries, awaits approval.
-- **Monthly rollover** — new sheet auto-created, previous month's report emailed.
-
 
 ## How it works
 
@@ -64,258 +71,247 @@ The agent **thinks** in a container; the work **happens** on your Mac via
                                                            update charts
 ```
 
-Two inputs, one engine:
-
-| | **Photo** | **Manual** |
-|---|---|---|
-| input | send food photo | text meal details |
-| analysis | AI vision → portion + ingredients | parse text |
-| calculation | calories, protein, carbs, fat | same |
-| logging | **Gemini appends to sheet** + updates charts | same |
-| verification | dashboard screenshot sent back | same |
-
-## What a meal becomes
-
-1. **Analyzed** — portions identified, ingredients recognized via vision.
-2. **Calculated** — macros computed: calories (kcal), protein (g), carbs (g), fat (g).
-3. **Logged via Gemini** — sheet opens, Gemini appends row, charts auto-update.
-4. **Verified** — dashboard screenshot confirms entry.
-5. **Texted back** — "🔥 450 kcal | 🍗 42g Pro | 🍞 28g Carb | 🥑 16g Fat — Remaining: 1250 kcal | 58g Protein needed."
-6. **Remembered** — stored in SQLite + Google Sheet for weekly/monthly analysis.
-
 <p align="center">
-  <img src="docs/img/amazon-search.png" width="50%" alt="Food photo being analyzed with overlays showing identified items">
-  <br><i>If Nutrition Goal is not achieved, Agent Helps in seraching alternatives on Amazon and add them "Add to Cart".</i>
+  <img src="docs/img/dashboard.jpg" width="80%" alt="Google Sheets dashboard with calorie line chart, macro pie chart, and summary cards">
+  <br><i>The dashboard Gemini creates: charts, cards, meal timing — all automatic.</i>
 </p>
 
-## The TDEE science
+## Proactive tracking
 
-Metabolix calculates your **Total Daily Energy Expenditure** using the Mifflin-St Jeor equation:
+Metabolix **reminds** you to log meals:
+- **10:00 AM** — Breakfast check
+- **1:00 PM** — Lunch check
+- **7:00 PM** — Dinner check
 
+If you haven't logged that meal, you'll get:
 ```
-BMR (Male)   = (10 × weight_kg) + (6.25 × height_cm) - (5 × age) + 5
-BMR (Female) = (10 × weight_kg) + (6.25 × height_cm) - (5 × age) - 161
-
-TDEE = BMR × Activity Multiplier
-
-Activity Levels:
-- Sedentary: 1.2
-- Lightly Active: 1.375
-- Moderately Active: 1.55
-- Very Active: 1.725
-- Extra Active: 1.9
+Haven't seen lunch yet. Have you eaten?
+Send a photo to log your macros and stay on track with your lose_weight goal.
 ```
-
-### Goal-based macro targets
-
-| Goal | Calories | Protein | Fat | Carbs |
-|------|----------|---------|-----|-------|
-| **Maintain** | TDEE | 2.0g/kg | 25% | Remainder |
-| **Lose Weight** | TDEE - 500 | 2.2g/kg | 25% | Remainder |
-| **Gain Muscle** | TDEE + 300 | 2.4g/kg | 25% | Remainder |
-| **Recomp** | TDEE | 2.5g/kg | 22% | Remainder |
-
-## Grocery automation
-
-When protein is missed 3+ days straight:
-
-1. **Detects deficit** — tracks daily compliance vs. target.
-2. **Opens Amazon Fresh** — via Latch, navigates to your cart.
-3. **Stages high-protein items**:
-   - 2× Greek Yogurt (Fage 0%, 500g) — $6.98 each
-   - 1× Whey Protein Isolate (2lb) — $39.99
-4. **Navigates to checkout** — stops at review page.
-5. **Texts approval request**:
-   ```
-   ⚠️ Protein deficit detected (3 days < target).
-   
-   Staged in Amazon cart:
-   - 2x Fage Greek Yogurt 0% (500g) - $6.98 each
-   - 1x Optimum Whey Isolate (2lb) - $39.99
-   
-   Total: $53.95 (before tax)
-   
-   Reply 'CONFIRM BUY' to complete purchase.
-   ```
-6. **Waits for exact phrase** — `CONFIRM BUY`.
-7. **Only then** clicks "Place Order".
-8. **Sends receipt** — screenshot of order confirmation.
-
-**It will NEVER execute payment without your explicit approval.**
-
-## Monthly rollover
-
-On the 1st of each month:
-
-1. **Creates new sheet** — `[YourName]-[NewMonth]-Metabolix`.
-2. **Uses Gemini** — sends same dashboard creation prompt, recreates structure in 30 seconds.
-3. **Generates report** from previous month:
-   - Total meals logged
-   - Average daily: calories, protein, carbs, fat
-   - Days on target vs. deficit
-   - Weekly trends
-   - Recommendations
-4. **Emails report** — formatted professionally, sent to your configured email.
-5. **Continues** — starts logging to new month's sheet.
-
-<p align="center">
-  <img src="docs/img/monthly-report.jpg" width="70%" alt="Monthly email report with stats and charts">
-  <br><i>Monthly report: auto-generated, emailed on the 1st — no manual export.</i>
-</p>
 
 ## Install (5 minutes)
 
-### Before you start (2 minutes, once per machine)
+### Requirements
 
-You need **Docker**, **git**, **Python 3**, and a **Plow account**. Then:
+- **Docker** (desktop or engine)
+- **Git**
+- **Python 3**
+- **Plow Latch** (Install [plow.co/latch](https://plow.co/latch))
+
+### Step 1: Install Plow CLI (if you haven't already)
 
 ```sh
 git clone https://github.com/plow-pbc/plow-agents.git
 export PATH="$PWD/plow-agents/bin:$PATH"
 plow-agents login     # authenticates by texting you a code
+plow-agents login --new-line # OR creates a new line and saves credentials, and then mint.
 ```
 
-If you have already done this for another agent, skip it.
-
-### 1. Get the agent a phone line
+### Step 2: Get a phone line
 
 ```sh
-plow-agents lines            # pick a free ln_... id
-plow-agents mint ln_xxxxx    # writes ./plow-credentials
+plow-agents lines            # shows available lines (ln_...)
+plow-agents mint ln_xxxxx    # creates ./plow-credentials
 ```
 
-### 2. Clone and start
+Save that line ID — you'll text it to interact with Metabolix.
+
+### Step 3: Clone and build
 
 ```sh
-git clone https://github.com/yourusername/metabolix.git
+git clone https://github.com/Mohit5Upadhyay/metabolix.git
 cd metabolix
-mv ../plow-credentials .     # or run `mint` from inside this directory
+mv ../plow-credentials .     # move credentials into project
 docker compose up --build -d
 ```
 
-The first build pulls the Plow base image and takes a few minutes. After that:
+First build takes 3-5 minutes (pulls base image). Watch for startup:
 
 ```sh
-docker compose logs -f agent   # wait for the gateway to come up
+docker compose logs -f agent   # logs
+docker compose down -v && docker compose up --build -d  # reset volume & rebuild
 ```
 
-### 3. Text it
+### Step 4: Register on Agent Index (required)
 
-Text the number `plow-agents lines` showed you. Say `hey metabolix` or `set up my profile`. It walks you through:
+Register your installation to track on the [AI Worth Using Agent Index](https://aiworthusing.com/agent-index):
 
+```sh
+# Download client
+curl -O https://raw.githubusercontent.com/plow-pbc/agent-index-client/main/standalone/agent_index_client.py
+
+# Register (use your own AGENT_ID, like "johns-metabolix")
+set -a; . ./plow-credentials; set +a
+python3 agent_index_client.py \
+  --register \
+  --agent "metabolix-$(whoami)" \
+  --name "Metabolix - $(whoami)" \
+  --blurb "Autonomous fitness and nutrition tracking via AI vision"
+```
+
+Your installation now reports hourly to its Agent Index page.
+
+### Step 5: First conversation
+
+Text the line number from step 2. Say `hey metabolix` or `set up my profile`.
+
+The agent walks you through:
 - Name, age, gender
 - Weight (kg), height (cm)
-- Activity level (sedentary → extra active)
-- Fitness goal (maintain, lose weight, gain muscle, recomp)
+- Activity level (sedentary → extra_active)
+- Fitness goal (maintain, lose_weight, gain_muscle, recomp)
 - Email for monthly reports
 
-### 4. First meal
+It then **creates your Google Sheet** via Gemini (30 seconds), texts you the link, and you're ready.
 
-Send a photo of your food with `lunch` or `dinner`. Within 10 seconds:
-- Macros calculated
-- Google Sheet updated via Gemini
-- Dashboard charts refreshed
-- Confirmation texted back
+### Step 6: Log first meal
 
-**Nothing is configured by editing files.** Everything happens in the chat.
+Send a photo of food with `lunch`. Within 10 seconds:
+```
+Grilled Chicken Salad Logged.
+🔥 450 kcal | 🍗 42g Pro | 🍞 28g Carb | 🥑 16g Fat
 
-### Stopping
-
-```sh
-docker compose down       # keeps memory and data
-docker compose down -v    # forgets everything, starts fresh
-plow-agents revoke        # releases the phone line
+Remaining Budget: 1250 kcal | 58g Protein needed.
+Insight: High protein, excellent thermic effect.
 ```
 
-## When it doesn't work
+Check your Google Sheet — dashboard charts are already updated.
 
-**`no such file or directory: ./plow-credentials`** — you ran `docker compose up`
-before `plow-agents mint`. Compose created a *directory* at that path. Remove it,
-run `mint`, then `up` again:
+## Commands
+
+```sh
+# View logs
+docker compose logs -f agent
+
+# Check profile
+docker compose exec --user hermes agent \
+  python3 /var/lib/hermes/skills/metabolix-profile/scripts/profile.py show
+
+# Today's meals
+docker compose exec --user hermes agent \
+  python3 /var/lib/hermes/skills/meal-logging/scripts/log_meal.py summary-today
+
+# Stop agent (keeps data)
+docker compose down
+
+# Reset everything
+docker compose down -v && rm -rf plow-credentials
+
+# Release phone line
+plow-agents revoke
+```
+
+## Troubleshooting
+
+**`no such file or directory: ./plow-credentials`** — run `plow-agents mint` before `docker compose up`. If Compose created a directory at that path:
 
 ```sh
 docker compose down -v && rm -rf plow-credentials && plow-agents mint ln_xxxxx
 ```
 
-**The build fails pulling the base image** — `docker logout public.ecr.aws`. A
-stale credential in Docker's config makes an anonymous public pull fail.
+**Build fails pulling base image** — `docker logout public.ecr.aws`. Stale credential blocks anonymous pulls.
 
-**It never texts you** — check `docker compose logs agent` for
-`plow_chat connected`. If the credential file is wrong the container blocks on
-purpose rather than starting half-configured.
+**Agent never texts** — check `docker compose logs agent | grep plow_chat`. Credential file must exist before container starts.
 
-**Gemini not working in Sheets** — ensure Google Workspace account with Gemini
-enabled. If unavailable, Metabolix falls back to manual logging (slower but
-functional).
+**Gemini not working** — ensure Google Workspace account with Gemini enabled. Agent falls back to manual logging if unavailable.
 
-## Commands
+## Grocery automation
 
-Check the agent's status:
+When protein target missed 3+ consecutive days:
 
-```sh
-# View profile and targets
-docker compose exec --user hermes agent \
-  python3 /var/lib/hermes/skills/metabolix-profile/scripts/profile.py show
+1. Opens Amazon.com (or Amazon.in based on location)
+2. Stages: 2× Greek Yogurt, 1× Whey Protein
+3. Navigates to checkout
+4. Texts: `⚠️ Protein deficit. Staged $54 in cart. Reply 'CONFIRM BUY'`
+5. **Waits for approval**
+6. Only then clicks "Place Order"
+7. Sends receipt screenshot
 
-# Today's summary
-docker compose exec --user hermes agent \
-  python3 /var/lib/hermes/skills/meal-logging/scripts/log_meal.py summary-today
+**NEVER executes payment without explicit `CONFIRM BUY`.**
 
-# Monthly stats
-docker compose exec --user hermes agent \
-  python3 /var/lib/hermes/skills/meal-logging/scripts/log_meal.py monthly-stats --month 2026-09
-```
+## Monthly rollover
 
-## What it will not do
+On the 1st of each month:
+1. Creates new sheet: `[YourName]-[NewMonth]-Metabolix`
+2. Uses Gemini to recreate dashboard (30 seconds)
+3. Generates report from previous month
+4. Emails: total meals, avg macros, compliance %, trends, recommendations
 
-- Log anything without analyzing it first (no blind guesses).
-- Execute grocery payments without explicit `CONFIRM BUY` approval.
-- Upload food photos anywhere — analysis is local, vision API only.
-- Share your data — everything stays in your Google Sheet and local SQLite.
-- Make dietary recommendations — it tracks macros, you make nutrition decisions.
+## What it tracks
 
-## The Plow tools it uses
+**STRICT**: ONE sheet per month with TWO tabs - Log (raw data) + Dashboard (analysis). NO dummy data EVER.
 
-- **[Latch](https://plow.co/latch)** — approved, sandboxed access to your Mac (Google Sheets, Amazon).
-- **[hermes-plow-plugin](https://github.com/plow-pbc/hermes-plow-plugin)** — the agent's phone line.
-- **Gemini in Google Sheets** — dashboard creation, data entry, chart updates.
+### Log Sheet (10 columns, ALL required per meal):
 
-## Under the hood
+| Column | Description | Calculation |
+|--------|-------------|-------------|
+| Timestamp | When logged | Auto (current datetime) |
+| Meal Type | breakfast/lunch/dinner/snack | Based on time or context |
+| Meal | Food description | Vision analysis |
+| Calories | kcal | Standard nutrition database |
+| Protein | grams | Standard nutrition database |
+| Carbs | grams | Standard nutrition database |
+| Fat | grams | Standard nutrition database |
+| Glycemic Load | 0-20 low, 20-40 med, 40+ high | (Carbs × GI) ÷ 100 |
+| Thermic Effect | low/moderate/high | Based on protein % |
+| Satiety Index | 0-5 (higher = fuller longer) | Protein + fiber + volume |
 
-| Path | What |
-|---|---|
-| `runtime/persona.md` | Metabolix identity, core instructions, Gemini-first workflow |
-| `skills/metabolix-profile/` | User profile, TDEE calculation, macro targets, sheet config |
-| `skills/metabolix-profile/scripts/profile.py` | BMR/TDEE math, target calculation, CLI (284 lines) |
-| `skills/meal-logging/` | Vision analysis, Gemini logging, verification, summaries |
-| `skills/meal-logging/scripts/log_meal.py` | Meal database, verification tracking, stats (254 lines) |
-| `skills/grocery-staging/` | Deficit detection, Amazon automation, approval gate |
-| `compose.yml`, `Dockerfile` | Docker setup, Plow base image extension |
+### Dashboard Sheet (auto-updates from Log):
 
-## Privacy & data
+**Goals Row** (saved after profile setup):
+- Daily Calories: [your_calculated_tdee]
+- Daily Protein: [your_calculated_protein]g
+- Daily Carbs: [your_calculated_carbs]g
+- Daily Fat: [your_calculated_fat]g
 
-- **Local storage**: SQLite at `$HERMES_HOME/metabolix/metabolix.db` (inside Docker volume).
-- **Your Google Sheet**: You own it, you control sharing.
-- **No uploads**: Food photos analyzed locally, never uploaded.
-- **No tracking**: No third-party analytics, no data sold.
-- **Credentials**: Amazon, Google OAuth stored in Latch vault, never in chat.
+**Summary Cards**:
+- Total Meals Today: `=COUNTIF(Log!A:A,TODAY())`
+- Avg Daily Calories (7d): `=AVERAGEIF(Log!A:A,">="&TODAY()-7,Log!D:D)`
+- Avg Daily Protein (7d): `=AVERAGEIF(Log!A:A,">="&TODAY()-7,Log!E:E)`
+- Days Tracked This Month: `=COUNTA(UNIQUE(FILTER(Log!A:A,MONTH(Log!A:A)=MONTH(TODAY()))))`
+
+**Today's Progress**:
+- Calories: `=SUMIF(Log!A:A,TODAY(),Log!D:D)` / [goal]
+- Protein: `=SUMIF(Log!A:A,TODAY(),Log!E:E)` / [goal]
+- % On Track: Checks if protein ≥90% goal
+
+**Charts** (adaptive, update as you log):
+1. Line: Daily Calories (current month only)
+2. Pie: Today's Macro Distribution (Protein/Carbs/Fat)
+3. Bar: Weekly Protein Trend vs Goal Line
+4. Column: Meals by Type (breakfast/lunch/dinner/snack count)
+5. Table: Daily Breakdown (Date | Meals | Calories | Protein | Status)
+
+All formulas visible — no hidden calculations. Dashboard uses ONLY real logged data.
+
+## Privacy
+
+- **Local storage**: SQLite in Docker volume
+- **Your Google Sheet**: You own it, control sharing
+- **No uploads**: Photos analyzed locally, never stored
+- **No tracking**: No third-party analytics
+- **Credentials**: Stored in Latch vault
 
 ## The Agent Index
 
-This image ships the AI Worth Using usage reporter as a supervised service. It
-reports token counts hourly — **no prompts, no message text, no file paths**.
-The `AGENT_ID` in `compose.yml` is what it reports under.
+This agent reports hourly token counts to [AI Worth Using Agent Index](https://aiworthusing.com/agent-index). No prompts, no messages, no file paths — only usage metrics.
+
+To rank on the leaderboard: verify your agent (click "Get my agent verified" on its page).
+
+## Support
+
+- **Discord**: [https://discord.gg/mSHWKRqZP](https://discord.gg/mSHWKRqZP)
+- **Plow**: [https://plow.co](https://plow.co)
+- **Agent Index**: [https://aiworthusing.com/agent-index](https://aiworthusing.com/agent-index)
 
 ## License
 
 MIT — see [LICENSE](LICENSE).
 
-Built on the Plow Hermes base image (Apache-2.0, © 2026 The Plow Collective) and
-Nous Research's Hermes Agent. Not affiliated with either; "Plow" and "Hermes"
-are their marks and this license grants no rights to them.
+cc: Built on [Plow Hermes](https://github.com/plow-pbc/plow-hermes-agent) (Apache-2.0).
 
 ---
 
 <p align="center">
-  <b>Text a photo. Get your macros. Stay on track.</b>
+  <b>Take a photo. Send it via iMessage. Get your macros. They're logged automatically. Stay on track.</b>
 </p>
