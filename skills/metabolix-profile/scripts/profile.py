@@ -226,6 +226,14 @@ def cmd_new_month(args, conn: sqlite3.Connection) -> None:
         sys.exit(2)  # Special exit code to signal new sheet needed
 
 
+def cmd_reset(args, conn: sqlite3.Connection) -> None:
+    """Reset all data - fresh start."""
+    conn.execute("DELETE FROM profile")
+    conn.execute("DELETE FROM sheet_config")
+    conn.commit()
+    print("Profile and sheet config reset. Ready for fresh setup.")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Metabolix profile management")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -259,6 +267,9 @@ def main():
     # new-month
     subparsers.add_parser("new-month", help="Check if new month sheet is needed")
     
+    # reset
+    subparsers.add_parser("reset", help="Reset all data for fresh start")
+    
     args = parser.parse_args()
     
     db_path = database_path()
@@ -274,6 +285,7 @@ def main():
         "set-sheet": cmd_set_sheet,
         "get-sheet": cmd_get_sheet,
         "new-month": cmd_new_month,
+        "reset": cmd_reset,
     }
     
     commands[args.command](args, conn)

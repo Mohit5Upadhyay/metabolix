@@ -39,6 +39,7 @@ When user sends food photo:
 ```sh
 python3 "$HERMES_HOME/skills/meal-logging/scripts/log_meal.py" add \
   --meal "Grilled Chicken Salad" \
+  --meal-type lunch \
   --calories 450 --protein 42 --carbs 28 --fat 16 \
   --insight "High protein, low glycemic, excellent thermic effect"
 ```

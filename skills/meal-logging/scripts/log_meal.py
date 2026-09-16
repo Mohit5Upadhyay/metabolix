@@ -28,17 +28,20 @@ def now() -> str:
 
 
 def init_db(conn: sqlite3.Connection) -> None:
-    """Initialize meal log schema."""
+    """Initialize meal log schema with ALL analysis parameters."""
     conn.execute("""
         CREATE TABLE IF NOT EXISTS meal_log (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             timestamp TEXT NOT NULL,
             meal_name TEXT NOT NULL,
+            meal_type TEXT CHECK (meal_type IN ('breakfast', 'lunch', 'dinner', 'snack')),
             calories REAL NOT NULL,
             protein_g REAL NOT NULL,
             carbs_g REAL NOT NULL,
             fat_g REAL NOT NULL,
-            insight TEXT,
+            glycemic_load REAL NOT NULL,
+            thermic_effect TEXT NOT NULL,
+            satiety_index REAL NOT NULL,
             verified BOOLEAN DEFAULT 0,
             sheet_row INTEGER
         )
@@ -47,14 +50,17 @@ def init_db(conn: sqlite3.Connection) -> None:
 
 
 def cmd_add(args, conn: sqlite3.Connection) -> None:
-    """Add a meal to the log."""
+    """Add a meal to the log with ALL analysis parameters."""
     timestamp = now()
+    meal_type = args.meal_type if hasattr(args, 'meal_type') else None
     
     cursor = conn.execute("""
         INSERT INTO meal_log
-        (timestamp, meal_name, calories, protein_g, carbs_g, fat_g, insight, verified)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 0)
-    """, (timestamp, args.meal, args.calories, args.protein, args.carbs, args.fat, args.insight))
+        (timestamp, meal_name, meal_type, calories, protein_g, carbs_g, fat_g, 
+         glycemic_load, thermic_effect, satiety_index, verified)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)
+    """, (timestamp, args.meal, meal_type, args.calories, args.protein, args.carbs, args.fat,
+          args.glycemic_load, args.thermic_effect, args.satiety_index))
     
     meal_id = cursor.lastrowid
     conn.commit()
@@ -63,11 +69,14 @@ def cmd_add(args, conn: sqlite3.Connection) -> None:
         "meal_id": meal_id,
         "timestamp": timestamp,
         "meal_name": args.meal,
+        "meal_type": meal_type,
         "calories": args.calories,
         "protein_g": args.protein,
         "carbs_g": args.carbs,
         "fat_g": args.fat,
-        "insight": args.insight,
+        "glycemic_load": args.glycemic_load,
+        "thermic_effect": args.thermic_effect,
+        "satiety_index": args.satiety_index,
         "status": "logged_locally",
     }))
 
@@ -158,6 +167,13 @@ def cmd_last_meal(args, conn: sqlite3.Connection) -> None:
     }))
 
 
+def cmd_reset(args, conn: sqlite3.Connection) -> None:
+    """Reset all meal logs."""
+    conn.execute("DELETE FROM meal_log")
+    conn.commit()
+    print("All meal logs deleted. Fresh start.")
+
+
 def cmd_monthly_stats(args, conn: sqlite3.Connection) -> None:
     """Get monthly statistics."""
     rows = conn.execute("""
@@ -209,11 +225,14 @@ def main():
     # add
     p_add = subparsers.add_parser("add", help="Log a meal")
     p_add.add_argument("--meal", required=True, help="Meal name")
+    p_add.add_argument("--meal-type", dest="meal_type", choices=["breakfast", "lunch", "dinner", "snack"], help="Meal type")
     p_add.add_argument("--calories", type=float, required=True)
     p_add.add_argument("--protein", type=float, required=True, help="Protein in grams")
     p_add.add_argument("--carbs", type=float, required=True, help="Carbs in grams")
     p_add.add_argument("--fat", type=float, required=True, help="Fat in grams")
-    p_add.add_argument("--insight", default="", help="Metabolic insight")
+    p_add.add_argument("--glycemic-load", dest="glycemic_load", type=float, required=True, help="Glycemic load")
+    p_add.add_argument("--thermic-effect", dest="thermic_effect", required=True, help="Thermic effect (low/moderate/high)")
+    p_add.add_argument("--satiety-index", dest="satiety_index", type=float, required=True, help="Satiety index (0-5)")
     
     # mark-verified
     p_verify = subparsers.add_parser("mark-verified", help="Mark meal as verified in sheet")
@@ -230,6 +249,9 @@ def main():
     p_monthly = subparsers.add_parser("monthly-stats", help="Get monthly statistics")
     p_monthly.add_argument("--month", required=True, help="Format: YYYY-MM")
     
+    # reset
+    subparsers.add_parser("reset", help="Delete all meal logs")
+    
     args = parser.parse_args()
     
     db_path = database_path()
@@ -244,6 +266,7 @@ def main():
         "summary-today": cmd_summary_today,
         "last-meal": cmd_last_meal,
         "monthly-stats": cmd_monthly_stats,
+        "reset": cmd_reset,
     }
     
     commands[args.command](args, conn)

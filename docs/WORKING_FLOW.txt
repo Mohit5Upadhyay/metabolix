@@ -1,0 +1,222 @@
+METABOLIX AGENT - COMPLETE WORKING FLOW
+==========================================
+
+1. USER CONNECTS
+-----------------
+Agent: "Hey! I'm Metabolix, your fitness tracking agent 💪
+        I'll help you track nutrition with zero manual work - just send meal photos.
+        Let's set up your profile so I can calculate personalized targets."
+
+2. PROFILE SETUP (One Question at a Time)
+------------------------------------------
+✓ Name
+✓ Age
+✓ Gender
+✓ Weight (kg)
+✓ Height (cm)
+✓ Activity Level (explains each option)
+✓ Goal (explains each: maintain, lose_weight, gain_muscle, recomp)
+✓ Email
+
+Saves to: profile.py init
+Calculates: TDEE (Mifflin-St Jeor), goal-based macros
+Explains: "Your BMR: X, TDEE: X, Daily Targets: Calories X, Protein Xg, Carbs Xg, Fat Xg"
+          "Why: [scientific reason based on goal]"
+
+3. GOOGLE SHEET CREATION
+-------------------------
+Opens: https://sheets.new via Latch
+Renames: "[Name]-[Month]-Metabolix" (e.g., "John-September-Metabolix")
+Enables: Gemini (click ✨)
+Sends Prompt: Full dashboard creation with:
+  - Log tab: 10 columns (Timestamp, Meal Type, Meal, Calories, Protein, Carbs, Fat, GL, Thermic, Satiety)
+  - Dashboard tab: Goals row + adaptive charts/tables
+  - NO dummy data - rows 2+ EMPTY
+
+Gemini Creates: Both tabs in 30 seconds
+Saves: sheet_url to profile.py set-sheet
+Sends: "✅ Sheet ready! [link]. Send a photo of your first meal to start tracking."
+
+4. MEAL LOGGING (Breakfast/Lunch/Dinner)
+-----------------------------------------
+User: [sends food photo]
+
+Agent:
+  ✓ Check current sheet (get-sheet) - ensures same sheet for whole month
+  ✓ Analyze photo (vision AI)
+  ✓ Calculate ALL 10 parameters:
+    - Macros: Calories, Protein, Carbs, Fat (nutrition DB)
+    - Glycemic Load: (Carbs × GI) ÷ 100
+    - Thermic Effect: based on protein % (low/moderate/high)
+    - Satiety Index: protein + fiber + volume (0-5)
+  ✓ Determine meal type (based on time: 6-11am=breakfast, 11am-3pm=lunch, 5-10pm=dinner)
+  ✓ Log to local DB (log_meal.py add)
+  ✓ Open Google Sheet (navigate to saved URL)
+  ✓ Go to "Log" tab
+  ✓ Activate Gemini
+  ✓ Send to Gemini: "Add to Log: Meal Type: lunch, Meal: Grilled Chicken Salad, Calories: 450, ..."
+  ✓ Gemini appends row
+  ✓ Dashboard auto-updates (charts, totals, % on track)
+  ✓ Verify in Dashboard
+  ✓ Mark verified (log_meal.py mark-verified)
+
+Sends: "✅ Grilled Chicken Salad Logged!
+        
+        📊 MACROS:
+        🔥 450 kcal | 🍗 42g Pro | 🍞 28g Carb | 🥑 16g Fat
+        
+        🧠 ANALYSIS:
+        Glycemic Load: 12 (low - steady energy!)
+        Thermic Effect: high (burns ~30% during digestion)
+        Satiety: 4/5 (keeps you full 3-4 hours)
+        
+        🎯 TODAY'S PROGRESS:
+        1200/2212 kcal | 98/165g Pro
+        Remaining: 1012 kcal | 67g Protein
+        
+        ✅ Crushing it! Right on target.
+        [Screenshot of Dashboard]"
+
+5. PROACTIVE REMINDERS
+----------------------
+10:00 AM - Breakfast Check:
+  ✓ check_meals.py --meal-type breakfast
+  ✓ If not logged: "☕ Morning [Name]! Haven't seen breakfast yet..."
+
+1:00 PM - Lunch Check:
+  ✓ check_meals.py --meal-type lunch
+  ✓ If not logged: "🍔 Lunch time check! No lunch logged yet..."
+
+7:00 PM - Dinner Check:
+  ✓ check_meals.py --meal-type dinner
+  ✓ If not logged: "🍽️ Dinner reminder! Don't break the streak..."
+
+Always encouraging, never judgmental.
+
+6. SAME SHEET ALL MONTH
+------------------------
+CRITICAL: Every meal goes to SAME sheet for that month.
+
+Before logging:
+  ✓ get-sheet → check current_month
+  ✓ If current month matches → use existing sheet
+  ✓ If month changed → create new sheet first
+
+Example:
+  Sept 15 lunch → John-September-Metabolix
+  Sept 20 dinner → John-September-Metabolix (SAME SHEET)
+  Oct 1 breakfast → Create "John-October-Metabolix" (NEW SHEET)
+
+7. LOG & DASHBOARD SYNC
+-----------------------
+Log Sheet:
+  - Row 1: Headers (bold, frozen, blue)
+  - Row 2+: ONLY real logged meals
+  - NO dummy data EVER
+
+Dashboard:
+  - Row 1: Goals (from profile calculation)
+  - Summary Cards: Auto-calculated from Log
+  - Charts: Adaptive, update as meals logged
+  - Formulas visible: =SUMIF(Log!A:A,TODAY(),Log!E:E)
+  - Shows 0 or blank until real data exists
+
+8. MONTHLY ROLLOVER
+-------------------
+On Oct 1 (new month):
+  ✓ Generate report from Sept sheet (monthly-stats --month 2026-09)
+  ✓ Email: Text summary (total meals, avg macros, % on track, trends)
+  ✓ Create new Oct sheet (same Gemini prompt)
+  ✓ Save new sheet URL (set-sheet)
+  ✓ Continue logging to Oct sheet
+
+Sept sheet preserved - user can always access old data.
+
+9. PROTEIN DEFICIT HANDLING
+----------------------------
+If 3+ consecutive days < 85% protein target:
+
+Agent: "⚠️ Hey [Name], I've noticed you've been below protein target for 3 days.
+        Your goal: 165g/day
+        Your avg: 120g/day (only 73%)
+        
+        Want me to help? I can suggest high-protein groceries.
+        Reply 'HELP WITH PROTEIN' if interested."
+
+User: "HELP WITH PROTEIN"
+
+Agent: "Great! What works best?
+        1. Greek Yogurt (easy, ready to eat)
+        2. Whey Protein (shakes, smoothies)
+        3. Chicken Breast (meal prep)
+        4. All of the above
+        
+        Reply with number."
+
+User: "2"
+
+Agent:
+  ✓ Open amazon.com/amazon.in/amazon fresh
+  ✓ Search "whey protein isolate"
+  ✓ Add 2lb tub to cart
+  ✓ Get cart link
+  ✓ Send: "✅ Added to your Amazon cart:
+           - Optimum Nutrition Whey Isolate 2lb (48 servings, 24g protein each)
+           
+           Total: ~$40
+           
+           Cart link: [url]
+           
+           Review in your browser. Complete payment yourself when ready.
+           I won't touch checkout - you stay in control! 👍"
+
+CRITICAL: Agent NEVER handles payment. Only adds to cart + sends link.
+
+10. USER COMMANDS
+-----------------
+"show sheet" / "send link":
+  → Sends current sheet URL
+
+"reset" / "start over":
+  → Asks confirmation
+  → If "YES RESET": Deletes profile + meals + sheet config
+  → Starts fresh profile setup
+
+"show targets" / "my goals":
+  → Shows calculated targets with explanation
+
+"today's summary" / "how am I doing":
+  → Shows today's meals, macros consumed vs target, motivating message
+
+11. NO DUMMY DATA RULE
+----------------------
+STRICT ENFORCEMENT:
+
+✗ Never pre-populate Log sheet with example meals
+✗ Never add sample data to demonstrate
+✗ Never show "typical day" examples
+✓ Only log meals user actually provides
+✓ Dashboard shows 0 or blank until real data exists
+✓ Charts empty until real meals logged
+
+12. DATA FLOW SUMMARY
+---------------------
+Photo → Vision Analysis → 10 Parameters Calculated
+  ↓
+SQLite Local Backup
+  ↓
+Get Current Sheet URL (ensures same month sheet)
+  ↓
+Open Sheet → Log Tab → Activate Gemini
+  ↓
+Gemini Appends Row
+  ↓
+Dashboard Auto-Updates (formulas recalculate)
+  ↓
+Screenshot Dashboard
+  ↓
+Send Engaging SMS Confirmation + Screenshot
+
+Total time: ~10 seconds per meal
+
+READY TO RUN ✅
