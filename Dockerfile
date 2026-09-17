@@ -1,7 +1,7 @@
 # Metabolix Agent variant built on the official Plow Hermes image.
 # Keep the base pinned by immutable tag and digest: it contains the Hermes
 # runtime, Plow Chat integration, and Latch configuration.
-FROM public.ecr.aws/e1h7x4a2/plow-cloud-agents:base-4747960eaa8a44ac24424bf0cc6c22559af61f43@sha256:fe9b0f428f9ed2da1698ecf0b504c79eceb9e016e770291ff6b3418b9f65449d
+FROM public.ecr.aws/e1h7x4a2/plow-cloud-agents:base-51f83158a70a383f03a4d03dbd8b6ea102cf0361@sha256:253d7ed3409effa7fa59113d93b4b79bb731d8264cdaf4cd60294924d0110a2e
 
 # plow-init composes the home's SOUL.md from the base persona plus this file
 # on every boot; nothing is COPYed to $HERMES_HOME/SOUL.md directly.
