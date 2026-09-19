@@ -294,7 +294,7 @@ All formulas visible — no hidden calculations. Dashboard uses ONLY real logged
 
 ## The Agent Index
 
-This agent reports hourly token counts to [AI Worth Using Agent Index](https://aiworthusing.com/agent-index). No prompts, no messages, no file paths — only usage metrics.
+This agent reports token counts every five minutes to [AI Worth Using Agent Index](https://aiworthusing.com/agent-index). No prompts, no messages, no file paths — only usage metrics.
 
 To rank on the leaderboard: verify your agent (click "Get my agent verified" on its page).
 
