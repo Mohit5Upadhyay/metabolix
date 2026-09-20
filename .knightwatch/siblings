@@ -11,8 +11,7 @@
 # is the plugin that base pins, which frames every turn and owns the Plow
 # tools these skills call; `plow` owns the API and Latch surface behind those
 # tools and pins which base tag tenants boot; `agent-index-client` is the
-# upstream this repo pins by commit and sha256 in `vendor/client.pin` and runs
-# as the `agent-index` service; `plow-agents` is the official runner
+# reporter the base ships and runs as the `agent-index` service; `plow-agents` is the official runner
 # `docs/INSTALL.md` clones into `tools/`, and that `bin/plow-agents` delegates
 # account, login, mint and revoke to. `NousResearch/hermes-agent` stays out — it
 # reaches this repo only through the base, never read as source here. Peer
